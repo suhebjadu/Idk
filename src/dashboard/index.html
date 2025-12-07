@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PikaShort Admin</title>
+  <link rel="stylesheet" href="/dashboard/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">PikaShort</div>
+      <input id="searchInput" placeholder="Search chat id..." oninput="onSearch()" />
+      <ul class="menu">
+        <li class="active" data-tab="users" onclick="showTab('users')">Users</li>
+        <li data-tab="inactive" onclick="showTab('inactive')">Inactive</li>
+        <li data-tab="messages" onclick="showTab('messages')">Default Messages</li>
+        <li data-tab="ads" onclick="showTab('ads')">Ads</li>
+      </ul>
+      <div class="footer">Logged in as Admin</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>PikaShort Admin</h1>
+        <div id="summary">Loading…</div>
+      </header>
+
+      <section id="tab-users" class="tab active">
+        <h2>All Users (<span id="total-users">0</span>)</h2>
+        <div class="users-controls">
+          <button onclick="refresh()">Refresh</button>
+        </div>
+        <div id="usersContainer" class="list"></div>
+      </section>
+
+      <section id="tab-inactive" class="tab">
+        <h2>Inactive Users (<span id="inactive-count">0</span>)</h2>
+        <div id="inactiveContainer" class="list"></div>
+      </section>
+
+      <section id="tab-messages" class="tab">
+        <h2>Default Messages</h2>
+        <label>Ads Message</label>
+        <textarea id="adsMessage"></textarea>
+
+        <label>Header Text</label>
+        <textarea id="headerText"></textarea>
+
+        <label>Footer Text</label>
+        <textarea id="footerText"></textarea>
+
+        <div class="row">
+          <button onclick="saveMessages()">Save</button>
+          <button onclick="previewMessages()">Preview</button>
+        </div>
+      </section>
+
+      <section id="tab-ads" class="tab">
+        <h2>Send Ads</h2>
+        <label>Ad Message</label>
+        <textarea id="sendAdText" placeholder="Your ad (Markdown allowed)"></textarea>
+        <div class="row">
+          <button onclick="sendAdsNow()">Send Ads Now</button>
+          <button onclick="showAdHistory()">History</button>
+        </div>
+        <div id="adHistory" class="list"></div>
+      </section>
+
+      <div id="toast" class="toast" style="display:none"></div>
+    </main>
+  </div>
+
+  <script src="/dashboard/static/script.js"></script>
+</body>
+</html>
