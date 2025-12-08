@@ -154,12 +154,9 @@ bot.onText(/^\/start(@\S+)?(\s+.*)?$/i, (msg) => {
     const username = (msg.from && (msg.from.username || msg.from.first_name)) ? (msg.from.username || msg.from.first_name) : "User";
     saveLastActive(chatId);
 
-    const dashboardLink = "https://smallshorturl.myvippanel.shop/member/tools/api";
-    const welcome = `👋 Hello *${escapeMd(username)}*!  
-
-Send your *PikaShort API Key* from *[Dashboard](${dashboardLink})* (use /api YOUR_API_KEY)
-
-Once your API key is set, just send any link — I will shorten it instantly 🔗🚀`;
+    const welcome = `👋 Hello <b>${escapeHtml(username)}</b>!\n\n` +
+    `Send your <b>Smallshorturl API Key</b> from <a href="https://smallshorturl.myvippanel.shop/member/tools/api">Dashboard</a> (use /api YOUR_API_KEY)\n\n` +
+    `Once your API key is set, just send any link — I will shorten it instantly 🔗🚀`;
 
     bot.sendMessage(chatId, welcome, { parse_mode: "Markdown" }).catch(console.error);
   } catch (e) {
@@ -274,12 +271,12 @@ bot.on('message', async (msg) => {
     }
 
     // format single message with spacing + emojis preserved
-    let message = "✨✨ Congratulations! Your URL has been successfully shortened! 🚀🔗\n\n";
-    pairs.forEach((p, idx) => {
-      message += `🔗 **Original URL:**\n${escapeMd(p.original)}\n\n`;
-      message += `🌐 **Shortened URL:**\n${mdCode(p.short)}\n`;
-      if (idx < pairs.length - 1) message += `\n`;
-    });
+    let message = "✨✨ Congratulations! Your URL has been successfully shortened! 🚀\n\n` +
+      `🔗 <b>Original URL:</b>\n${escapeHtml(orig)}\n\n` +
+      `🌐 <b>Shortened URL:</b>\n<code>${escapeHtml(s)}</code>`;
+    bot.sendMessage(chatId, reply, { parse_mode: 'HTML', reply_to_message_id: msg.message_id, disable_web_page_preview: true });
+  });
+});
 
     // header/footer
     const dbCurrent = readDB();
