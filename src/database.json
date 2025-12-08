@@ -2,10 +2,9 @@
   "tokens": {},          // हर user की API key
   "lastActive": {},      // user last active timestamp
   "admins": [],          // allowed admins
-  "premium": [],         // premium users list
-  "adsMessage": "",      // default ads
-  "headerText": "",
-  "footerText": "",
+  "premium": [],         // premium users lis
+  "admins": ["6358090699"],
+  "adsMessage": "🔥 Special Offer! Shorten links & earn more",     // default a
   "adStats": {
     "totalDelivered": 0,
     "totalFailed": 0,
