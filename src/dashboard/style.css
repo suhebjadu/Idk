@@ -1,23 +1,87 @@
-:root{--bg:#071029;--card:#0e1530;--accent:#7c4dff;--muted:#98a6b8}
-*{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
-body{margin:0;background:linear-gradient(180deg,#031026,#051226);color:#eaf4ff}
-.app{display:flex;min-height:100vh}
-.sidebar{width:260px;padding:20px;background:#081228;border-right:1px solid rgba(255,255,255,0.02);}
-.brand{font-size:20px;font-weight:700;color:var(--accent);margin-bottom:12px}
-.sidebar input{width:100%;padding:10px;border-radius:8px;border:none;background:#0f1a33;color:#fff;margin-bottom:12px}
-.menu{padding:0;margin:12px 0}
-.menu li{list-style:none;padding:10px;border-radius:8px;cursor:pointer;color:#cfe3ff;margin-bottom:6px}
-.menu li.active, .menu li:hover{background:linear-gradient(90deg, rgba(124,77,255,0.16), rgba(124,77,255,0.08));color:#fff}
-.footer{color:var(--muted);font-size:13px;margin-top:20px}
-.main{flex:1;padding:20px}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.topbar h1{margin:0;font-size:20px}
-.tab{display:none}
-.tab.active{display:block}
-.list{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);max-height:500px;overflow:auto}
-.user-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(255,255,255,0.02)}
-.user-item .meta{font-size:13px;color:var(--muted)}
-.row{display:flex;gap:10px;margin-top:12px}
-textarea{width:100%;height:120px;padding:12px;border-radius:8px;border:none;background:#0f1a33;color:#fff}
-button{background:var(--accent);border:none;padding:10px 14px;border-radius:8px;color:#fff;cursor:pointer}
-.toast{position:fixed;right:20px;top:20px;background:#2ecc71;color:#fff;padding:10px 16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.3)}
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #0b0014;
+    color: white;
+}
+
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background: #1a0033;
+    padding: 25px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #7a00ff;
+}
+
+.login-box h2 {
+    text-align: center;
+}
+
+.input-group {
+    margin: 15px 0;
+}
+
+.input-group label {
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    background: #7a00ff;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sidebar {
+    width: 230px;
+    background: #150026;
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
+    box-shadow: 0 0 15px #5500aa;
+}
+
+.sidebar button {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 12px;
+    background: #7a00ff;
+}
+
+.main {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.tab {
+    display: none;
+}
+
+#savedToast {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #00ff88;
+    color: black;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
