@@ -1,87 +1,25 @@
-body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    background: #0b0014;
-    color: white;
-}
+:root{--bg:#08010f;--card:#0f0520;--accent:#7a00ff;--muted:#9fb0c8}
+*{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
+body{margin:0;background:linear-gradient(180deg,#030015,#07102a);color:#e8f0ff}
+.login-body{display:flex;align-items:center;justify-content:center;height:100vh}
+.login-card{width:360px;background:linear-gradient(180deg,#190233,#0f0120);padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.login-card input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:#fff}
+.login-card button{width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff}
+.err{color:#ff9b9b}
+.note{font-size:13px;color:#bcd}
 
-.login-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.login-box {
-    background: #1a0033;
-    padding: 25px;
-    width: 350px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px #7a00ff;
-}
-
-.login-box h2 {
-    text-align: center;
-}
-
-.input-group {
-    margin: 15px 0;
-}
-
-.input-group label {
-    font-size: 14px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: none;
-}
-
-button {
-    background: #7a00ff;
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.sidebar {
-    width: 230px;
-    background: #150026;
-    position: fixed;
-    height: 100%;
-    padding-top: 20px;
-    box-shadow: 0 0 15px #5500aa;
-}
-
-.sidebar button {
-    display: block;
-    width: 90%;
-    margin: 10px auto;
-    padding: 12px;
-    background: #7a00ff;
-}
-
-.main {
-    margin-left: 250px;
-    padding: 20px;
-}
-
-.tab {
-    display: none;
-}
-
-#savedToast {
-    display: none;
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: #00ff88;
-    color: black;
-    padding: 10px 15px;
-    border-radius: 8px;
-}
+.dash-body{display:flex;height:100vh}
+.sidebar{width:240px;padding:18px;background:linear-gradient(180deg,#100024,#0c001a);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+.sidebar .brand{font-size:20px;color:var(--accent);font-weight:700;margin-bottom:12px}
+.sidebar input{width:100%;padding:10px;border-radius:8px;border:none;margin-bottom:10px;background:rgba(255,255,255,0.03);color:#fff}
+.sidebar nav button{display:block;width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:#cfe3ff;cursor:pointer}
+.main{flex:1;padding:20px;overflow:auto}
+.header{display:flex;justify-content:space-between;align-items:center}
+.view{display:none}
+.view.active{display:block}
+.card{background:var(--card);padding:12px;border-radius:10px;margin:10px 0}
+.list{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;max-height:360px;overflow:auto}
+.row{display:flex;gap:8px}
+textarea{width:100%;min-height:80px;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:#fff}
+input[type="file"]{color:#fff}
+.toast{position:fixed;right:20px;bottom:20px;background:#00e396;color:#001;border-radius:8px;padding:10px}
