@@ -1,179 +1,118 @@
-let token = localStorage.getItem("token");
+const API_ROOT = '/api';
+const token = localStorage.getItem('ps_token');
+if (!token) { window.location.href = '/login'; }
 
-if (!token) {
-    window.location.href = "/login";
-}
+function authHeaders() { return { 'Content-Type': 'application/json', 'x-auth-token': token }; }
+function toast(msg, t=2000) { const el = document.getElementById('toast'); el.innerText = msg; el.style.display='block'; setTimeout(()=>el.style.display='none', t); }
 
-function showToast() {
-    let t = document.getElementById("savedToast");
-    t.style.display = "block";
-    setTimeout(() => t.style.display = "none", 2000);
-}
-
-function switchTab(id) {
-    document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
-    document.getElementById(id).style.display = "block";
+function show(view) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
 }
 
 async function loadData() {
-    let res = await fetch("/api/data", {
-        headers: { "x-auth-token": token }
-    });
+  const r = await fetch(API_ROOT + '/data', { headers: authHeaders() });
+  const j = await r.json();
+  if (!j.ok) { alert('Auth error'); localStorage.removeItem('ps_token'); return window.location='/login'; }
+  document.getElementById('totalUsers').innerText = Object.keys(j.lastActive||{}).length;
+  document.getElementById('queueSize').innerText = j.adStats ? (j.adStats.totalSent || 0) : 0;
+  document.getElementById('adsSent').innerText = j.adStats ? (j.adStats.totalSent || 0) : 0;
+  document.getElementById('adsMessage').value = j.adsMessage || '';
+  document.getElementById('adsMessage').value = j.adsMessage || '';
+  document.getElementById('adsMessage').value = j.adsMessage || '';
+  document.getElementById('adsMessage').value = j.adsMessage || '';
+  document.getElementById('adsMessage').value = j.adsMessage || '';
 
-    let data = await res.json();
-    if (!data.ok) return alert("Auth error");
-
-    document.getElementById("adsBox").value = data.adsMessage;
-    document.getElementById("msgAds").value = data.adsMessage;
-    document.getElementById("msgHeader").value = data.headerText;
-    document.getElementById("msgFooter").value = data.footerText;
-    document.getElementById("msgInactive").value = data.inactiveMessage;
-
-    document.getElementById("totalUsers").innerText = Object.keys(data.lastActive).length;
-    document.getElementById("queueSize").innerText = data.queue || 0;
-    document.getElementById("adsSent").innerText = data.adStats.totalSent;
-    document.getElementById("adsDelivered").innerText = data.adStats.totalDelivered;
-    document.getElementById("adsFailed").innerText = data.adStats.totalFailed;
-
-    loadUsers();
-    loadInactive();
-    loadUploads();
+  renderUsers(Object.keys(j.lastActive || {}));
+  renderInactive(j.inactive || []);
+  renderUploads(j.lastUploads || []);
+  renderAdHistory(j.adStats || {});
 }
 
-async function loadUsers() {
-    let res = await fetch("/api/users", { headers: { "x-auth-token": token } });
-    let data = await res.json();
-    let box = document.getElementById("usersList");
-    box.innerHTML = "";
-    data.users.forEach(u => {
-        let li = document.createElement("li");
-        li.innerText = u;
-        box.appendChild(li);
-    });
+function renderUsers(users) {
+  const box = document.getElementById('usersList'); box.innerHTML='';
+  users.forEach(u => { const el=document.createElement('div'); el.className='card'; el.innerText = u; box.appendChild(el); });
+}
+function renderInactive(list) {
+  const box = document.getElementById('inactiveList'); box.innerHTML='';
+  list.forEach(u => { const el=document.createElement('div'); el.className='card'; el.innerHTML=`${u} <button onclick="notify('${u}')">Notify</button>`; box.appendChild(el); });
+}
+async function notify(uid) {
+  if (!confirm('Notify ' + uid + '?')) return;
+  const res = await fetch(API_ROOT + '/sendto', { method:'POST', headers: authHeaders(), body: JSON.stringify({ userId: uid, text: document.getElementById('inactiveMessage').value || 'We miss you!' })});
+  const j = await res.json();
+  toast(j.ok ? 'Notified' : 'Failed');
 }
 
-async function searchUsers() {
-    let q = document.getElementById("userSearch").value.trim();
-    let res = await fetch("/api/users?q=" + q, { headers: { "x-auth-token": token } });
-    let data = await res.json();
-    let box = document.getElementById("usersList");
-    box.innerHTML = "";
-    data.users.forEach(u => {
-        let li = document.createElement("li");
-        li.innerText = u;
-        box.appendChild(li);
-    });
-}
-
-async function loadInactive() {
-    let res = await fetch("/api/inactive", { headers: { "x-auth-token": token } });
-    let data = await res.json();
-    let box = document.getElementById("inactiveList");
-    box.innerHTML = "";
-    data.inactive.forEach(u => {
-        let li = document.createElement("li");
-        li.innerText = u;
-        box.appendChild(li);
-    });
-}
-
-async function sendInactiveNow() {
-    let msg = prompt("Message to send:");
-    if (!msg) return;
-
-    let res = await fetch("/api/sendads", {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "x-auth-token": token },
-        body: JSON.stringify({ text: msg })
-    });
-
-    alert("Queued!");
-}
-
+async function refresh() { await loadData(); toast('Refreshed'); }
 async function saveMessages() {
-    let res = await fetch("/api/save", {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "x-auth-token": token },
-        body: JSON.stringify({
-            adsMessage: document.getElementById("msgAds").value,
-            headerText: document.getElementById("msgHeader").value,
-            footerText: document.getElementById("msgFooter").value,
-            inactiveMessage: document.getElementById("msgInactive").value
-        })
-    });
-    showToast();
+  const body = { adsMessage: document.getElementById('adsMessage').value, headerText: document.getElementById('headerText').value, footerText: document.getElementById('footerText').value, inactiveMessage: document.getElementById('inactiveMessage').value };
+  await fetch(API_ROOT + '/save', { method:'POST', headers: authHeaders(), body: JSON.stringify(body) });
+  toast('Saved');
 }
-
 async function sendAds() {
-    let text = document.getElementById("adsBox").value;
-    await fetch("/api/sendads", {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "x-auth-token": token },
-        body: JSON.stringify({ text })
-    });
-    alert("Queued!");
+  const text = document.getElementById('adText').value;
+  if (!text) return toast('Enter ad');
+  await fetch(API_ROOT + '/sendads', { method:'POST', headers: authHeaders(), body: JSON.stringify({ text }) });
+  toast('Queued');
 }
 
 async function uploadMedia() {
-    let file = document.getElementById("mediaFile").files[0];
-    if (!file) return alert("Choose file");
-
-    let form = new FormData();
-    form.append("media", file);
-
-    let res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "x-auth-token": token },
-        body: form
-    });
-
-    alert("Uploaded!");
-    loadUploads();
+  const file = document.getElementById('mediaFile').files[0];
+  if (!file) return toast('Choose file');
+  const form = new FormData();
+  form.append('media', file);
+  const r = await fetch(API_ROOT + '/upload', { method:'POST', headers: { 'x-auth-token': token }, body: form });
+  const j = await r.json();
+  if (j.ok) { toast('Uploaded'); loadUploads(); } else toast('Upload failed');
 }
 
 async function loadUploads() {
-    let res = await fetch("/api/lastuploads", {
-        headers: { "x-auth-token": token }
-    });
-
-    let data = await res.json();
-    let box = document.getElementById("uploadsList");
-    box.innerHTML = "";
-
-    data.lastUploads.forEach(f => {
-        let li = document.createElement("li");
-        li.innerHTML = `
-            <b>${f.original}</b><br>
-            <button onclick="sendMedia('${f.filename}', 'image')">Send as Image</button>
-            <button onclick="sendMedia('${f.filename}', 'video')">Send as Video</button>
-        `;
-        box.appendChild(li);
-    });
+  const r = await fetch(API_ROOT + '/lastuploads', { headers: authHeaders() });
+  const j = await r.json();
+  renderUploads(j.lastUploads || []);
 }
-
+function renderUploads(list) {
+  const box = document.getElementById('uploads'); box.innerHTML='';
+  list.forEach(f => {
+    const el = document.createElement('div'); el.className='card';
+    el.innerHTML = `<b>${f.original}</b><div><button onclick="sendMedia('${f.filename}','image')">Send as Image</button> <button onclick="sendMedia('${f.filename}','video')">Send as Video</button></div>`;
+    box.appendChild(el);
+  });
+}
 async function sendMedia(fileName, type) {
-    let caption = document.getElementById("mediaCaption").value;
-    await fetch("/api/sendmedia", {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "x-auth-token": token },
-        body: JSON.stringify({ fileName, mediaType: type, caption })
-    });
-    alert("Queued!");
+  const caption = document.getElementById('mediaCaption').value || '';
+  const r = await fetch(API_ROOT + '/sendmedia', { method:'POST', headers: authHeaders(), body: JSON.stringify({ fileName, mediaType: type, caption }) });
+  const j = await r.json();
+  toast(j.ok ? 'Queued' : 'Failed');
 }
 
 async function sendToUser() {
-    let userId = document.getElementById("sendToID").value.trim();
-    let text = document.getElementById("sendToText").value.trim();
-    if (!userId || !text) return alert("Missing fields");
+  const id = document.getElementById('sendtoId').value.trim();
+  const text = document.getElementById('sendtoText').value.trim();
+  if (!id || !text) return toast('Missing');
+  const r = await fetch(API_ROOT + '/sendto', { method:'POST', headers: authHeaders(), body: JSON.stringify({ userId: id, text }) });
+  const j = await r.json();
+  toast(j.ok ? 'Sent' : 'Failed');
+}
 
-    await fetch("/api/sendto", {
-        method: "POST",
-        headers: { "Content-Type":"application/json","x-auth-token": token },
-        body: JSON.stringify({ userId, text })
-    });
+async function sendInactiveNow() {
+  const msg = prompt('Message to send to inactive users:', document.getElementById('inactiveMessage').value || '');
+  if (!msg) return;
+  await fetch(API_ROOT + '/sendads', { method:'POST', headers: authHeaders(), body: JSON.stringify({ text: msg }) });
+  toast('Queued');
+}
 
-    alert("Sent!");
+async function onSearch() {
+  const q = document.getElementById('search').value.trim();
+  const r = await fetch(API_ROOT + '/users?q=' + encodeURIComponent(q), { headers: authHeaders() });
+  const j = await r.json();
+  renderUsers(j.users || []);
+}
+
+async function renderAdHistory(stats) {
+  // simple
 }
 
 loadData();
-switchTab("statsTab");
+show('stats');
