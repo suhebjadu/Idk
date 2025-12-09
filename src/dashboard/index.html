@@ -1,95 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PikaShort Admin Dashboard</title>
-<link rel="stylesheet" href="/dashboard/static/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PikaShort Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/static/style.css">
 </head>
-
 <body class="dash-body">
+  <aside class="sidebar">
+    <div class="brand">PikaShort</div>
+    <input id="search" placeholder="Search chat id..." oninput="onSearch()" />
+    <nav>
+      <button onclick="show('stats')">Stats</button>
+      <button onclick="show('users')">Users</button>
+      <button onclick="show('inactive')">Inactive</button>
+      <button onclick="show('messages')">Messages</button>
+      <button onclick="show('ads')">Text Ads</button>
+      <button onclick="show('media')">Media Ads</button>
+      <button onclick="show('sendto')">SendTo</button>
+    </nav>
+    <div class="small">Logged as Admin</div>
+  </aside>
 
-<div class="sidebar">
-    <h2>PikaShort V18</h2>
-    <button onclick="switchTab('statsTab')">📊 Stats</button>
-    <button onclick="switchTab('usersTab')">👥 Users</button>
-    <button onclick="switchTab('inactiveTab')">⏳ Inactive Users</button>
-    <button onclick="switchTab('adsTab')">📢 Send Ads</button>
-    <button onclick="switchTab('mediaTab')">🖼 Media Ads</button>
-    <button onclick="switchTab('sendtoTab')">🎯 SendTo User</button>
-    <button onclick="switchTab('messagesTab')">✏️ Edit Messages</button>
-</div>
+  <main class="main">
+    <header><h1>PikaShort Admin</h1><div id="summary">Loading…</div></header>
 
-<div class="main">
+    <section id="view-stats" class="view active">
+      <h2>Stats</h2>
+      <div class="card">Total Users: <span id="totalUsers">0</span></div>
+      <div class="card">Queue Size: <span id="queueSize">0</span></div>
+      <div class="card">Ads Sent: <span id="adsSent">0</span></div>
+    </section>
 
-    <div id="savedToast">Saved!</div>
+    <section id="view-users" class="view">
+      <h2>Users</h2>
+      <button onclick="refresh()">Refresh</button>
+      <div id="usersList" class="list"></div>
+    </section>
 
-    <div id="statsTab" class="tab">
-        <h2>📊 Bot Stats</h2>
-        <div class="stat-box">
-            <p>Total Users: <span id="totalUsers"></span></p>
-            <p>Queue Size: <span id="queueSize"></span></p>
-            <p>Ads Sent: <span id="adsSent"></span></p>
-            <p>Delivered: <span id="adsDelivered"></span></p>
-            <p>Failed: <span id="adsFailed"></span></p>
-        </div>
-    </div>
+    <section id="view-inactive" class="view">
+      <h2>Inactive Users</h2>
+      <button onclick="sendInactiveNow()">Send inactive message now</button>
+      <div id="inactiveList" class="list"></div>
+    </section>
 
-    <div id="usersTab" class="tab">
-        <h2>👥 Users</h2>
-        <input id="userSearch" oninput="searchUsers()" placeholder="Search Chat ID…">
-        <ul id="usersList"></ul>
-    </div>
+    <section id="view-messages" class="view">
+      <h2>Default Messages</h2>
+      <label>Ads Message</label><textarea id="adsMessage"></textarea>
+      <label>Header Text</label><textarea id="headerText"></textarea>
+      <label>Footer Text</label><textarea id="footerText"></textarea>
+      <label>Inactive Message</label><textarea id="inactiveMessage"></textarea>
+      <div class="row"><button onclick="saveMessages()">Save</button></div>
+    </section>
 
-    <div id="inactiveTab" class="tab">
-        <h2>⏳ Inactive Users</h2>
-        <ul id="inactiveList"></ul>
-        <button onclick="sendInactiveNow()">Send inactive message now to all</button>
-    </div>
+    <section id="view-ads" class="view">
+      <h2>Send Text Ads</h2>
+      <textarea id="adText" placeholder="Write ad..."></textarea>
+      <div class="row"><button onclick="sendAds()">Send to all</button></div>
+      <h3>Ad History</h3><div id="adHistory" class="list"></div>
+    </section>
 
-    <div id="adsTab" class="tab">
-        <h2>📢 Broadcast Text Ads</h2>
-        <textarea id="adsBox" placeholder="Write your ad..."></textarea>
-        <button onclick="saveMessages()">Save</button>
-        <button onclick="sendAds()">Send to all users</button>
-    </div>
+    <section id="view-media" class="view">
+      <h2>Media Ads</h2>
+      <input id="mediaFile" type="file" />
+      <input id="mediaCaption" placeholder="Caption" />
+      <div class="row"><button onclick="uploadMedia()">Upload</button></div>
+      <h3>Uploads</h3><div id="uploads" class="list"></div>
+    </section>
 
-    <div id="mediaTab" class="tab">
-        <h2>🖼 Upload Image / 🎬 Video Ads</h2>
-        <input type="file" id="mediaFile">
-        <input type="text" id="mediaCaption" placeholder="Caption...">
-        <button onclick="uploadMedia()">Upload</button>
+    <section id="view-sendto" class="view">
+      <h2>SendTo User</h2>
+      <input id="sendtoId" placeholder="Chat ID" />
+      <textarea id="sendtoText" placeholder="Message"></textarea>
+      <div class="row"><button onclick="sendToUser()">Send</button></div>
+    </section>
 
-        <h3>Uploaded Files</h3>
-        <ul id="uploadsList"></ul>
-    </div>
+  </main>
 
-    <div id="sendtoTab" class="tab">
-        <h2>🎯 Send message to single user</h2>
-        <input id="sendToID" placeholder="Chat ID">
-        <textarea id="sendToText" placeholder="Message..."></textarea>
-        <button onclick="sendToUser()">Send</button>
-    </div>
+  <div id="toast" class="toast" style="display:none"></div>
 
-    <div id="messagesTab" class="tab">
-        <h2>✏️ Default Bot Messages</h2>
-
-        <h3>Ads Message</h3>
-        <textarea id="msgAds"></textarea>
-
-        <h3>Header Text</h3>
-        <textarea id="msgHeader"></textarea>
-
-        <h3>Footer Text</h3>
-        <textarea id="msgFooter"></textarea>
-
-        <h3>Inactive Message</h3>
-        <textarea id="msgInactive"></textarea>
-
-        <button onclick="saveMessages()">Save All</button>
-    </div>
-
-</div>
-
-<script src="/dashboard/static/script.js"></script>
+  <script src="/dashboard/static/script.js"></script>
 </body>
 </html>
