@@ -1,25 +1,194 @@
-:root{--bg:#08010f;--card:#0f0520;--accent:#7a00ff;--muted:#9fb0c8}
-*{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
-body{margin:0;background:linear-gradient(180deg,#030015,#07102a);color:#e8f0ff}
-.login-body{display:flex;align-items:center;justify-content:center;height:100vh}
-.login-card{width:360px;background:linear-gradient(180deg,#190233,#0f0120);padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-.login-card input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:#fff}
-.login-card button{width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff}
-.err{color:#ff9b9b}
-.note{font-size:13px;color:#bcd}
+/* -------------------- */
+/* GLOBAL STYLES */
+/* -------------------- */
 
-.dash-body{display:flex;height:100vh}
-.sidebar{width:240px;padding:18px;background:linear-gradient(180deg,#100024,#0c001a);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-.sidebar .brand{font-size:20px;color:var(--accent);font-weight:700;margin-bottom:12px}
-.sidebar input{width:100%;padding:10px;border-radius:8px;border:none;margin-bottom:10px;background:rgba(255,255,255,0.03);color:#fff}
-.sidebar nav button{display:block;width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:#cfe3ff;cursor:pointer}
-.main{flex:1;padding:20px;overflow:auto}
-.header{display:flex;justify-content:space-between;align-items:center}
-.view{display:none}
-.view.active{display:block}
-.card{background:var(--card);padding:12px;border-radius:10px;margin:10px 0}
-.list{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;max-height:360px;overflow:auto}
-.row{display:flex;gap:8px}
-textarea{width:100%;min-height:80px;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:#fff}
-input[type="file"]{color:#fff}
-.toast{position:fixed;right:20px;bottom:20px;background:#00e396;color:#001;border-radius:8px;padding:10px}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(135deg, #1f1f1f, #2b2b2b);
+    color: white;
+    overflow: hidden;
+}
+
+/* Glass Effect */
+.glass {
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* -------------------- */
+/* SIDEBAR */
+/* -------------------- */
+
+.sidebar {
+    width: 250px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu-btn {
+    padding: 12px 15px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    text-align: left;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.menu-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-btn.active {
+    background: #4aa3ff;
+}
+
+.logout-btn {
+    margin-top: auto;
+    padding: 12px;
+    border: none;
+    background: #ff4d4d;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+/* -------------------- */
+/* MAIN AREA */
+/* -------------------- */
+
+.main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.page {
+    display: none;
+    padding: 25px;
+    animation: fade 0.2s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* Cards */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    padding: 20px;
+    text-align: center;
+}
+
+.card h3 {
+    font-weight: 600;
+}
+
+/* Lists */
+
+.list {
+    margin-top: 20px;
+}
+
+.list li {
+    list-style: none;
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 8px;
+}
+
+/* Inputs, Buttons */
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 15px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+}
+
+.primary-btn {
+    background: #4aa3ff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.danger-btn {
+    background: #ff4747;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.ads-box {
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+}
+
+/* Toast */
+
+#toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4caf50;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: none;
+    animation: fade 0.3s;
+}
