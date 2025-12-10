@@ -1,9 +1,9 @@
-# PikaShort V18 (GOD) — Telegram URL Shortener + Admin Dashboard
 
-## Requirements
-- Node.js >=16
-- Env vars set (TELEGRAM_BOT_TOKEN, ADMIN_ID, ADMIN_PASSWORD, DASHBOARD_SECRET, PORT optional)
+PikaShort V20 GOD++++++
+Deliverable package (minimal, deploy-ready). Edit and enable extra integrations (AI, payments) as needed.
 
-## Install
-```bash
-npm install
+Deploy:
+1) npm install
+2) Set env vars on Render:
+   TELEGRAM_BOT_TOKEN, ADMIN_ID, ADMIN_PASSWORD, DASHBOARD_SECRET
+3) Start: npm start
