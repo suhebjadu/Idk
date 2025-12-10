@@ -1,43 +1,91 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PikaShort Admin Login</title>
-  <link rel="stylesheet" href="/dashboard/static/style.css">
-</head>
-<body class="login-body">
-  <div class="login-card">
-    <h2>PikaShort Admin</h2>
-    <input id="chatId" placeholder="Admin Chat ID (e.g. 6358090699)" />
-    <input id="password" placeholder="Password" type="password" />
-    <button id="loginBtn">Login</button>
-    <p id="err" class="err"></p>
-    <p class="note">Login uses Admin Chat ID and Admin Password (set in env)</p>
-  </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PikaShort Admin Login</title>
 
-  <script>
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-      const chatId = document.getElementById('chatId').value.trim();
-      const password = document.getElementById('password').value.trim();
-      document.getElementById('err').innerText = '';
-      try {
-        const r = await fetch('/api/login', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ chatId, password })
-        });
-        const j = await r.json();
-        if (j.success && j.token) {
-          localStorage.setItem('ps_token', j.token);
-          window.location.href = '/dashboard?token=' + j.token;
-        } else {
-          document.getElementById('err').innerText = j.error || 'Invalid credentials';
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    
+    <style>
+        body {
+            justify-content: center;
+            align-items: center;
         }
-      } catch (e) {
-        document.getElementById('err').innerText = 'Network error';
-      }
-    });
-  </script>
+
+        .login-box {
+            width: 350px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #4aa3ff;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box glass">
+    <div class="login-title">Admin Login</div>
+
+    <input id="loginChatId" placeholder="Chat ID">
+    <input id="loginPass" type="password" placeholder="Password">
+
+    <button onclick="doLogin()">Login</button>
+</div>
+
+<div id="toast">Error</div>
+
+<script>
+    function toast(msg) {
+        let t = document.getElementById("toast");
+        t.innerText = msg;
+        t.style.display = "block";
+        setTimeout(() => t.style.display = "none", 2000);
+    }
+
+    async function doLogin() {
+        let chatId = loginChatId.value.trim();
+        let pass = loginPass.value.trim();
+
+        const res = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chatId, pass })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            location.href = "/dashboard";
+        } else {
+            toast(data.message || "Login failed");
+        }
+    }
+</script>
+
 </body>
 </html>
