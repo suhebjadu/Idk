@@ -1,19 +1,17 @@
 {
-  "name": "pikashort-v18-god",
+  "name": "pikashort-v20",
   "version": "1.0.0",
   "main": "bot.js",
+  "type": "module",
   "scripts": {
     "start": "node bot.js"
   },
   "dependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "multer": "^1.4.5-lts.1",
     "node-telegram-bot-api": "^0.61.0",
-    "mime-types": "^2.1.35"
-  },
-  "engines": {
-    "node": ">=16.0.0"
+    "uuid": "^9.0.0",
+    "cookie-parser": "^1.4.6"
   }
 }
