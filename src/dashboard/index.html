@@ -1,84 +1,153 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PikaShort Dashboard</title>
-  <link rel="stylesheet" href="/dashboard/static/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PikaShort Dashboard – V20 GOD+++++</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="dash-body">
-  <aside class="sidebar">
-    <div class="brand">PikaShort</div>
-    <input id="search" placeholder="Search chat id..." oninput="onSearch()" />
-    <nav>
-      <button onclick="show('stats')">Stats</button>
-      <button onclick="show('users')">Users</button>
-      <button onclick="show('inactive')">Inactive</button>
-      <button onclick="show('messages')">Messages</button>
-      <button onclick="show('ads')">Text Ads</button>
-      <button onclick="show('media')">Media Ads</button>
-      <button onclick="show('sendto')">SendTo</button>
-    </nav>
-    <div class="small">Logged as Admin</div>
-  </aside>
 
-  <main class="main">
-    <header><h1>PikaShort Admin</h1><div id="summary">Loading…</div></header>
+<body>
 
-    <section id="view-stats" class="view active">
-      <h2>Stats</h2>
-      <div class="card">Total Users: <span id="totalUsers">0</span></div>
-      <div class="card">Queue Size: <span id="queueSize">0</span></div>
-      <div class="card">Ads Sent: <span id="adsSent">0</span></div>
+<div class="sidebar glass">
+    <h2 class="logo">PikaShort</h2>
+
+    <div class="menu">
+        <button class="menu-btn active" data-page="dashboard">📊 Dashboard</button>
+        <button class="menu-btn" data-page="users">👥 All Users</button>
+        <button class="menu-btn" data-page="inactive">😴 Inactive Users</button>
+        <button class="menu-btn" data-page="ads">📢 Ads Center</button>
+        <button class="menu-btn" data-page="messages">💬 Default Messages</button>
+        <button class="menu-btn" data-page="premium">⭐ Premium Users</button>
+        <button class="menu-btn" data-page="settings">⚙ Settings</button>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+
+<div class="main">
+
+    <!-- DASHBOARD PAGE -->
+    <section id="dashboard" class="page active glass">
+        <h1>📊 Admin Dashboard</h1>
+
+        <div class="grid">
+            <div class="card glass">
+                <h3>Total Users</h3>
+                <p id="totalUsers">0</p>
+            </div>
+
+            <div class="card glass">
+                <h3>Inactive Users</h3>
+                <p id="inactiveUsers">0</p>
+            </div>
+
+            <div class="card glass">
+                <h3>Premium Users</h3>
+                <p id="premiumUsers">0</p>
+            </div>
+
+            <div class="card glass">
+                <h3>Server Status</h3>
+                <p id="serverStatus">Checking...</p>
+            </div>
+        </div>
     </section>
 
-    <section id="view-users" class="view">
-      <h2>Users</h2>
-      <button onclick="refresh()">Refresh</button>
-      <div id="usersList" class="list"></div>
+
+    <!-- USERS PAGE -->
+    <section id="users" class="page glass">
+        <h1>👥 All Users</h1>
+        <input type="text" id="searchUsers" placeholder="Search user…" oninput="searchUserList()">
+
+        <ul id="usersList" class="list"></ul>
     </section>
 
-    <section id="view-inactive" class="view">
-      <h2>Inactive Users</h2>
-      <button onclick="sendInactiveNow()">Send inactive message now</button>
-      <div id="inactiveList" class="list"></div>
+
+    <!-- INACTIVE USERS PAGE -->
+    <section id="inactive" class="page glass">
+        <h1>😴 Inactive Users</h1>
+
+        <button onclick="sendInactiveNow()" class="primary-btn">Send Inactive Message Now</button>
+        <p>Auto-send every <b>2 days</b></p>
+
+        <ul id="inactiveList" class="list"></ul>
     </section>
 
-    <section id="view-messages" class="view">
-      <h2>Default Messages</h2>
-      <label>Ads Message</label><textarea id="adsMessage"></textarea>
-      <label>Header Text</label><textarea id="headerText"></textarea>
-      <label>Footer Text</label><textarea id="footerText"></textarea>
-      <label>Inactive Message</label><textarea id="inactiveMessage"></textarea>
-      <div class="row"><button onclick="saveMessages()">Save</button></div>
+
+    <!-- ADS CENTER -->
+    <section id="ads" class="page glass">
+        <h1>📢 Ads Center</h1>
+
+        <div class="ads-box">
+            <h3>Send Text Ad</h3>
+            <textarea id="textAd" placeholder="Enter your message..."></textarea>
+            <button onclick="sendTextAd()" class="primary-btn">Send To All Users</button>
+        </div>
+
+        <div class="ads-box">
+            <h3>Send Image / Video Ad</h3>
+            <p>Use Telegram bot commands: <b>/sendimgads</b> & <b>/sendvideoads</b></p>
+        </div>
+
+        <div class="ads-box">
+            <h3>SendTo (Single User Ad)</h3>
+            <input id="sendToId" placeholder="Chat ID">
+            <textarea id="sendToMsg" placeholder="Your Message"></textarea>
+            <button onclick="sendToUser()" class="primary-btn">Send</button>
+        </div>
+
     </section>
 
-    <section id="view-ads" class="view">
-      <h2>Send Text Ads</h2>
-      <textarea id="adText" placeholder="Write ad..."></textarea>
-      <div class="row"><button onclick="sendAds()">Send to all</button></div>
-      <h3>Ad History</h3><div id="adHistory" class="list"></div>
+
+    <!-- DEFAULT MESSAGES -->
+    <section id="messages" class="page glass">
+        <h1>💬 Default Messages</h1>
+
+        <div id="messagesBox"></div>
     </section>
 
-    <section id="view-media" class="view">
-      <h2>Media Ads</h2>
-      <input id="mediaFile" type="file" />
-      <input id="mediaCaption" placeholder="Caption" />
-      <div class="row"><button onclick="uploadMedia()">Upload</button></div>
-      <h3>Uploads</h3><div id="uploads" class="list"></div>
+
+    <!-- PREMIUM USERS -->
+    <section id="premium" class="page glass">
+        <h1>⭐ Premium Users</h1>
+
+        <ul id="premiumList" class="list"></ul>
+
+        <input id="premiumAddId" placeholder="Chat ID to Add">
+        <button onclick="addPremiumUser()" class="primary-btn">Add Premium</button>
+
+        <input id="premiumRemoveId" placeholder="Chat ID to Remove">
+        <button onclick="removePremiumUser()" class="danger-btn">Remove Premium</button>
     </section>
 
-    <section id="view-sendto" class="view">
-      <h2>SendTo User</h2>
-      <input id="sendtoId" placeholder="Chat ID" />
-      <textarea id="sendtoText" placeholder="Message"></textarea>
-      <div class="row"><button onclick="sendToUser()">Send</button></div>
+
+    <!-- SETTINGS PAGE -->
+    <section id="settings" class="page glass">
+        <h1>⚙ Settings</h1>
+
+        <label>Header</label>
+        <input id="headerInput">
+
+        <label>Footer</label>
+        <input id="footerInput">
+
+        <label>Inactive Days</label>
+        <input id="inactiveDays" type="number" min="1" value="2">
+
+        <button onclick="saveSettings()" class="primary-btn">Save Settings</button>
     </section>
 
-  </main>
+</div>
 
-  <div id="toast" class="toast" style="display:none"></div>
 
-  <script src="/dashboard/static/script.js"></script>
+<!-- TOAST -->
+<div id="toast">Saved ✔</div>
+
+<script src="/script.js"></script>
+
 </body>
 </html>
